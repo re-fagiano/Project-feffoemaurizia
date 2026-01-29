@@ -2,7 +2,6 @@
 Router Chat richieste
 """
 from typing import List
-from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -16,7 +15,7 @@ router = APIRouter()
 
 @router.get("/richiesta/{richiesta_id}", response_model=List[MessaggioResponse])
 async def get_messaggi_richiesta(
-    richiesta_id: UUID,
+    richiesta_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -60,7 +59,7 @@ async def send_messaggio(
 
 @router.post("/richiesta/{richiesta_id}/mark-read")
 async def mark_read(
-    richiesta_id: UUID,
+    richiesta_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):

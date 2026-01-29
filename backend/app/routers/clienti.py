@@ -2,7 +2,6 @@
 Router CRUD Clienti
 """
 from typing import List, Optional
-from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
@@ -39,7 +38,7 @@ async def list_clienti(
 
 @router.get("/{cliente_id}", response_model=ClienteResponse)
 async def get_cliente(
-    cliente_id: UUID,
+    cliente_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -93,7 +92,7 @@ async def create_cliente(
 
 @router.put("/{cliente_id}", response_model=ClienteResponse)
 async def update_cliente(
-    cliente_id: UUID,
+    cliente_id: str,
     cliente_data: ClienteUpdate,
     current_user: Utente = Depends(require_tecnico()),
     db: Session = Depends(get_db)
@@ -114,7 +113,7 @@ async def update_cliente(
 
 @router.delete("/{cliente_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_cliente(
-    cliente_id: UUID,
+    cliente_id: str,
     current_user: Utente = Depends(require_tecnico()),
     db: Session = Depends(get_db)
 ):
@@ -132,7 +131,7 @@ async def delete_cliente(
 # =============================================
 @router.post("/{cliente_id}/sedi", response_model=SedeClienteResponse, status_code=status.HTTP_201_CREATED)
 async def add_sede(
-    cliente_id: UUID,
+    cliente_id: str,
     sede_data: SedeClienteCreate,
     current_user: Utente = Depends(require_tecnico()),
     db: Session = Depends(get_db)
@@ -151,8 +150,8 @@ async def add_sede(
 
 @router.delete("/{cliente_id}/sedi/{sede_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_sede(
-    cliente_id: UUID,
-    sede_id: UUID,
+    cliente_id: str,
+    sede_id: str,
     current_user: Utente = Depends(require_tecnico()),
     db: Session = Depends(get_db)
 ):

@@ -2,7 +2,6 @@
 Router CRUD Ambiti
 """
 from typing import List, Optional
-from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
@@ -29,7 +28,7 @@ async def list_ambiti(
 
 @router.get("/{ambito_id}", response_model=AmbitoResponse)
 async def get_ambito(
-    ambito_id: UUID,
+    ambito_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -64,7 +63,7 @@ async def create_ambito(
 
 @router.put("/{ambito_id}", response_model=AmbitoResponse)
 async def update_ambito(
-    ambito_id: UUID,
+    ambito_id: str,
     ambito_data: AmbitoUpdate,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)
@@ -85,7 +84,7 @@ async def update_ambito(
 
 @router.delete("/{ambito_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_ambito(
-    ambito_id: UUID,
+    ambito_id: str,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)
 ):

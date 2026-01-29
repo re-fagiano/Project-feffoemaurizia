@@ -2,7 +2,6 @@
 Router CRUD Attività con timer
 """
 from typing import List, Optional
-from uuid import UUID
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
@@ -31,7 +30,7 @@ TRANSIZIONI_ATTIVITA = {
 async def list_attivita(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
-    richiesta_id: Optional[UUID] = None,
+    richiesta_id: Optional[str] = None,
     stato: Optional[StatoAttivita] = None,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -49,7 +48,7 @@ async def list_attivita(
 
 @router.get("/{attivita_id}", response_model=AttivitaResponse)
 async def get_attivita(
-    attivita_id: UUID,
+    attivita_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -94,7 +93,7 @@ async def create_attivita(
 
 @router.put("/{attivita_id}", response_model=AttivitaResponse)
 async def update_attivita(
-    attivita_id: UUID,
+    attivita_id: str,
     attivita_data: AttivitaUpdate,
     current_user: Utente = Depends(require_tecnico()),
     db: Session = Depends(get_db)
@@ -115,7 +114,7 @@ async def update_attivita(
 
 @router.post("/{attivita_id}/transizione", response_model=AttivitaResponse)
 async def transizione_stato_attivita(
-    attivita_id: UUID,
+    attivita_id: str,
     transizione: AttivitaTransizioneStato,
     current_user: Utente = Depends(require_tecnico()),
     db: Session = Depends(get_db)
@@ -148,7 +147,7 @@ async def transizione_stato_attivita(
 
 @router.post("/{attivita_id}/addebito", response_model=AttivitaResponse)
 async def set_addebito(
-    attivita_id: UUID,
+    attivita_id: str,
     addebito: AttivitaAddebito,
     current_user: Utente = Depends(require_tecnico()),
     db: Session = Depends(get_db)
@@ -173,7 +172,7 @@ async def set_addebito(
 # =============================================
 @router.post("/{attivita_id}/checkin", response_model=TimeEntryResponse)
 async def checkin(
-    attivita_id: UUID,
+    attivita_id: str,
     checkin_data: TimeEntryCreate,
     current_user: Utente = Depends(require_tecnico()),
     db: Session = Depends(get_db)
@@ -213,7 +212,7 @@ async def checkin(
 
 @router.post("/{attivita_id}/checkout", response_model=TimeEntryResponse)
 async def checkout(
-    attivita_id: UUID,
+    attivita_id: str,
     checkout_data: TimeEntryCheckout,
     current_user: Utente = Depends(require_tecnico()),
     db: Session = Depends(get_db)
@@ -240,7 +239,7 @@ async def checkout(
 
 @router.get("/{attivita_id}/time-entries", response_model=List[TimeEntryResponse])
 async def get_time_entries(
-    attivita_id: UUID,
+    attivita_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):

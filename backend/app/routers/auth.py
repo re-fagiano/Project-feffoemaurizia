@@ -117,6 +117,14 @@ async def login(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
+@router.get("/me", response_model=UtenteResponse)
+async def get_current_user_info(
+    current_user: Utente = Depends(get_current_user)
+):
+    """Restituisce i dati dell'utente corrente"""
+    return current_user
+
+
 @router.post("/register", response_model=UtenteResponse, status_code=status.HTTP_201_CREATED)
 async def register(
     user_data: UtenteCreate,

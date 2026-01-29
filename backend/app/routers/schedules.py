@@ -2,7 +2,6 @@
 Router CRUD Schedules (Pianificazioni automatiche)
 """
 from typing import List, Optional
-from uuid import UUID
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
@@ -55,7 +54,7 @@ async def get_prossimi_trigger(
 
 @router.get("/{schedule_id}", response_model=ScheduleResponse)
 async def get_schedule(
-    schedule_id: UUID,
+    schedule_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -82,7 +81,7 @@ async def create_schedule(
 
 @router.put("/{schedule_id}", response_model=ScheduleResponse)
 async def update_schedule(
-    schedule_id: UUID,
+    schedule_id: str,
     schedule_data: ScheduleUpdate,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)
@@ -103,7 +102,7 @@ async def update_schedule(
 
 @router.post("/{schedule_id}/toggle")
 async def toggle_schedule(
-    schedule_id: UUID,
+    schedule_id: str,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)
 ):
@@ -119,7 +118,7 @@ async def toggle_schedule(
 
 @router.post("/{schedule_id}/trigger")
 async def trigger_schedule(
-    schedule_id: UUID,
+    schedule_id: str,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)
 ):
@@ -137,7 +136,7 @@ async def trigger_schedule(
 
 @router.delete("/{schedule_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_schedule(
-    schedule_id: UUID,
+    schedule_id: str,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)
 ):

@@ -2,7 +2,6 @@
 Router CRUD Contratti
 """
 from typing import List, Optional
-from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 
@@ -36,7 +35,7 @@ async def list_contratti_templates(
 
 @router.get("/templates/{contratto_id}", response_model=ContrattoResponse)
 async def get_contratto_template(
-    contratto_id: UUID,
+    contratto_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -79,7 +78,7 @@ async def create_contratto_template(
 
 @router.put("/templates/{contratto_id}", response_model=ContrattoResponse)
 async def update_contratto_template(
-    contratto_id: UUID,
+    contratto_id: str,
     contratto_data: ContrattoUpdate,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)
@@ -103,7 +102,7 @@ async def update_contratto_template(
 # =============================================
 @router.post("/templates/{contratto_id}/voci", response_model=VoceContrattoResponse, status_code=status.HTTP_201_CREATED)
 async def add_voce_contratto(
-    contratto_id: UUID,
+    contratto_id: str,
     voce_data: VoceContrattoCreate,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)
@@ -122,8 +121,8 @@ async def add_voce_contratto(
 
 @router.delete("/templates/{contratto_id}/voci/{voce_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_voce_contratto(
-    contratto_id: UUID,
-    voce_id: UUID,
+    contratto_id: str,
+    voce_id: str,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)
 ):
@@ -146,7 +145,7 @@ async def delete_voce_contratto(
 async def list_contratti_clienti(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
-    cliente_id: Optional[UUID] = None,
+    cliente_id: Optional[str] = None,
     stato: Optional[StatoContratto] = None,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -164,7 +163,7 @@ async def list_contratti_clienti(
 
 @router.get("/{contratto_cliente_id}", response_model=ContrattoClienteResponse)
 async def get_contratto_cliente(
-    contratto_cliente_id: UUID,
+    contratto_cliente_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -191,7 +190,7 @@ async def create_contratto_cliente(
 
 @router.put("/{contratto_cliente_id}", response_model=ContrattoClienteResponse)
 async def update_contratto_cliente(
-    contratto_cliente_id: UUID,
+    contratto_cliente_id: str,
     contratto_data: ContrattoClienteUpdate,
     current_user: Utente = Depends(require_supervisore()),
     db: Session = Depends(get_db)
@@ -212,7 +211,7 @@ async def update_contratto_cliente(
 
 @router.post("/{contratto_cliente_id}/ricarica")
 async def ricarica_ore(
-    contratto_cliente_id: UUID,
+    contratto_cliente_id: str,
     ore_aggiuntive: int,
     current_user: Utente = Depends(require_admin()),
     db: Session = Depends(get_db)

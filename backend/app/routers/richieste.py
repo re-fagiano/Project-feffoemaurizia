@@ -2,7 +2,6 @@
 Router CRUD Richieste con gestione stati
 """
 from typing import List, Optional
-from uuid import UUID
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
@@ -36,7 +35,7 @@ async def list_richieste(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
     stato: Optional[StatoRichiesta] = None,
-    cliente_id: Optional[UUID] = None,
+    cliente_id: Optional[str] = None,
     priorita: Optional[str] = None,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -60,7 +59,7 @@ async def list_richieste(
 
 @router.get("/{richiesta_id}", response_model=RichiestaDetailResponse)
 async def get_richiesta(
-    richiesta_id: UUID,
+    richiesta_id: str,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -78,32 +77,38 @@ async def create_richiesta(
     db: Session = Depends(get_db)
 ):
     """Crea nuova richiesta"""
-    # Determina stato iniziale
-    stato_iniziale = StatoRichiesta.da_gestire
-    if richiesta_data.origine in [OrigineRichiesta.monitoraggio, OrigineRichiesta.centralino, OrigineRichiesta.email]:
-        stato_iniziale = StatoRichiesta.da_verificare
-    
-    new_richiesta = Richiesta(
-        cliente_id=richiesta_data.cliente_id,
-        sede_id=richiesta_data.sede_id,
-        ambito_id=richiesta_data.ambito_id,
-        descrizione=richiesta_data.descrizione,
-        priorita=richiesta_data.priorita,
-        data_appuntamento=richiesta_data.data_appuntamento,
-        origine=richiesta_data.origine,
-        stato=stato_iniziale,
-        creato_da_id=current_user.id,
-        scadenza_validazione=datetime.now().date() + timedelta(days=7)  # Default 7 giorni
-    )
-    db.add(new_richiesta)
-    db.commit()
-    db.refresh(new_richiesta)
-    return new_richiesta
+    try:
+        # Determina stato iniziale
+        stato_iniziale = StatoRichiesta.da_gestire
+        if richiesta_data.origine in [OrigineRichiesta.monitoraggio, OrigineRichiesta.centralino, OrigineRichiesta.email]:
+            stato_iniziale = StatoRichiesta.da_verificare
+        
+        new_richiesta = Richiesta(
+            cliente_id=richiesta_data.cliente_id,
+            sede_id=richiesta_data.sede_id,
+            ambito_id=richiesta_data.ambito_id,
+            descrizione=richiesta_data.descrizione,
+            priorita=richiesta_data.priorita,
+            data_appuntamento=richiesta_data.data_appuntamento,
+            origine=richiesta_data.origine,
+            stato=stato_iniziale,
+            creato_da_id=current_user.id,
+            scadenza_validazione=datetime.now().date() + timedelta(days=7)
+        )
+        db.add(new_richiesta)
+        db.commit()
+        db.refresh(new_richiesta)
+        return new_richiesta
+    except Exception as e:
+        import traceback
+        print(f"ERROR create_richiesta: {type(e).__name__}: {e}")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.put("/{richiesta_id}", response_model=RichiestaResponse)
 async def update_richiesta(
-    richiesta_id: UUID,
+    richiesta_id: str,
     richiesta_data: RichiestaUpdate,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -124,7 +129,7 @@ async def update_richiesta(
 
 @router.post("/{richiesta_id}/transizione", response_model=RichiestaResponse)
 async def transizione_stato(
-    richiesta_id: UUID,
+    richiesta_id: str,
     transizione: RichiestaTransizioneStato,
     current_user: Utente = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -159,7 +164,7 @@ async def transizione_stato(
 
 @router.delete("/{richiesta_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_richiesta(
-    richiesta_id: UUID,
+    richiesta_id: str,
     current_user: Utente = Depends(require_supervisore()),
     db: Session = Depends(get_db)
 ):

@@ -56,7 +56,8 @@ def decode_token(token: str) -> Optional[TokenData]:
         ruolo: str = payload.get("ruolo")
         if user_id is None:
             return None
-        return TokenData(user_id=UUID(user_id), email=email, ruolo=UserRole(ruolo) if ruolo else None)
+        # user_id è già una stringa
+        return TokenData(user_id=user_id, email=email, ruolo=UserRole(ruolo) if ruolo else None)
     except JWTError:
         return None
 
