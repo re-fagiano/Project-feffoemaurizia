@@ -48,7 +48,7 @@ export default function NuovoSchedulePage() {
             fetch("http://localhost:8000/api/clienti", {
                 headers: { Authorization: `Bearer ${token}` },
             }).then((r) => r.json()),
-            fetch("http://localhost:8000/api/contratti/clienti", {
+            fetch("http://localhost:8000/api/contratti", {
                 headers: { Authorization: `Bearer ${token}` },
             }).then((r) => r.json()).catch(() => []),
         ])
@@ -106,7 +106,7 @@ export default function NuovoSchedulePage() {
                 throw new Error(data.detail || "Errore durante la creazione");
             }
 
-            router.push("/dashboard/schedules");
+            router.push("/schedules");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Errore di connessione");
         } finally {
@@ -115,11 +115,11 @@ export default function NuovoSchedulePage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-950 p-8">
+        <div className="p-8">
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
-                    <Link href="/dashboard/schedules" className="btn btn-ghost p-2">
+                    <Link href="/schedules" className="btn btn-ghost p-2">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
@@ -328,7 +328,7 @@ export default function NuovoSchedulePage() {
 
                     {/* Actions */}
                     <div className="flex gap-4">
-                        <Link href="/dashboard/schedules" className="btn btn-outline flex-1">
+                        <Link href="/schedules" className="btn btn-outline flex-1">
                             Annulla
                         </Link>
                         <button

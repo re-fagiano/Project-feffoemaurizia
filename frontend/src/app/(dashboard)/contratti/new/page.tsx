@@ -93,7 +93,7 @@ export default function NuovoContrattoPage() {
                 note: formData.note || null,
             };
 
-            const res = await fetch("http://localhost:8000/api/contratti/clienti", {
+            const res = await fetch("http://localhost:8000/api/contratti/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -107,7 +107,7 @@ export default function NuovoContrattoPage() {
                 throw new Error(data.detail || "Errore durante la creazione");
             }
 
-            router.push("/dashboard/contratti");
+            router.push("/contratti");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Errore di connessione");
         } finally {
@@ -116,11 +116,11 @@ export default function NuovoContrattoPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-950 p-8">
+        <div className="p-8">
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
-                    <Link href="/dashboard/contratti" className="btn btn-ghost p-2">
+                    <Link href="/contratti" className="btn btn-ghost p-2">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
@@ -336,7 +336,7 @@ export default function NuovoContrattoPage() {
 
                     {/* Actions */}
                     <div className="flex gap-4">
-                        <Link href="/dashboard/contratti" className="btn btn-outline flex-1">
+                        <Link href="/contratti" className="btn btn-outline flex-1">
                             Annulla
                         </Link>
                         <button

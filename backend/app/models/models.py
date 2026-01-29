@@ -11,103 +11,14 @@ from sqlalchemy import (
 # Usiamo String per ID per compatibilità SQLite
 # In produzione con PostgreSQL, usare UUID
 from sqlalchemy.orm import relationship
-import enum
-
 from ..database import Base
 
-
-# =============================================
-# ENUMS
-# =============================================
-class UserRole(str, enum.Enum):
-    admin = "admin"
-    supervisore = "supervisore"
-    tecnico = "tecnico"
-    cliente = "cliente"
-
-
-class StatoRichiesta(str, enum.Enum):
-    da_verificare = "da_verificare"
-    nulla = "nulla"
-    da_gestire = "da_gestire"
-    in_gestione = "in_gestione"
-    risolta = "risolta"
-    riaperta = "riaperta"
-    validata = "validata"
-    da_fatturare = "da_fatturare"
-    fatturata = "fatturata"
-    chiusa = "chiusa"
-
-
-class OrigineRichiesta(str, enum.Enum):
-    cliente = "cliente"
-    tecnico = "tecnico"
-    admin = "admin"
-    monitoraggio = "monitoraggio"
-    centralino = "centralino"
-    email = "email"
-    schedulatore = "schedulatore"
-
-
-class StatoAttivita(str, enum.Enum):
-    programmata = "programmata"
-    in_lavorazione = "in_lavorazione"
-    in_standby = "in_standby"
-    completata = "completata"
-
-
-class TipoAddebito(str, enum.Enum):
-    a_pagamento = "a_pagamento"
-    contratto = "contratto"
-    monte_ore = "monte_ore"
-    incluso = "incluso"
-
-
-class TipoContratto(str, enum.Enum):
-    forfettario = "forfettario"
-    monte_ore = "monte_ore"
-
-
-class StatoContratto(str, enum.Enum):
-    attivo = "attivo"
-    scaduto = "scaduto"
-    sospeso = "sospeso"
-    disdetto = "disdetto"
-    esaurito = "esaurito"
-
-
-class FrequenzaCanone(str, enum.Enum):
-    mensile = "mensile"
-    trimestrale = "trimestrale"
-    semestrale = "semestrale"
-    annuale = "annuale"
-
-
-class TipoEntitaSchedule(str, enum.Enum):
-    contratto = "contratto"
-    licenza = "licenza"
-    prodotto = "prodotto"
-    certificazione = "certificazione"
-    voce_contratto = "voce_contratto"
-    custom = "custom"
-
-
-class TipoAzioneSchedule(str, enum.Enum):
-    crea_richiesta = "crea_richiesta"
-    invia_notifica = "invia_notifica"
-    genera_alert = "genera_alert"
-    custom = "custom"
-
-
-class FrequenzaSchedule(str, enum.Enum):
-    giornaliera = "giornaliera"
-    settimanale = "settimanale"
-    mensile = "mensile"
-    bimestrale = "bimestrale"
-    trimestrale = "trimestrale"
-    semestrale = "semestrale"
-    annuale = "annuale"
-    custom = "custom"
+# Import Enums from central file
+from ..enums import (
+    UserRole, StatoRichiesta, OrigineRichiesta, StatoAttivita, 
+    TipoAddebito, TipoContratto, StatoContratto, FrequenzaCanone,
+    TipoEntitaSchedule, TipoAzioneSchedule, FrequenzaSchedule
+)
 
 
 # =============================================

@@ -64,7 +64,7 @@ export default function SchedulesPage() {
                     <h1 className="text-2xl font-bold">Schedulatore</h1>
                     <p className="text-gray-400">Gestisci azioni automatizzate e scadenze</p>
                 </div>
-                <Link href="/dashboard/schedules/new" className="btn btn-primary">
+                <Link href="/schedules/new" className="btn btn-primary">
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
@@ -79,7 +79,7 @@ export default function SchedulesPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <p className="text-gray-400 mb-4">Nessuno schedule configurato</p>
-                    <Link href="/dashboard/schedules/new" className="btn btn-primary">
+                    <Link href="/schedules/new" className="btn btn-primary">
                         Crea il primo schedule
                     </Link>
                 </div>

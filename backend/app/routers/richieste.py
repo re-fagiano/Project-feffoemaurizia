@@ -5,6 +5,7 @@ from typing import List, Optional
 from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 from ..database import get_db
 from ..models import Richiesta, Attivita, Utente, StatoRichiesta, OrigineRichiesta, UserRole
@@ -77,33 +78,32 @@ async def create_richiesta(
     db: Session = Depends(get_db)
 ):
     """Crea nuova richiesta"""
-    try:
-        # Determina stato iniziale
-        stato_iniziale = StatoRichiesta.da_gestire
-        if richiesta_data.origine in [OrigineRichiesta.monitoraggio, OrigineRichiesta.centralino, OrigineRichiesta.email]:
-            stato_iniziale = StatoRichiesta.da_verificare
-        
-        new_richiesta = Richiesta(
-            cliente_id=richiesta_data.cliente_id,
-            sede_id=richiesta_data.sede_id,
-            ambito_id=richiesta_data.ambito_id,
-            descrizione=richiesta_data.descrizione,
-            priorita=richiesta_data.priorita,
-            data_appuntamento=richiesta_data.data_appuntamento,
-            origine=richiesta_data.origine,
-            stato=stato_iniziale,
-            creato_da_id=current_user.id,
-            scadenza_validazione=datetime.now().date() + timedelta(days=7)
-        )
-        db.add(new_richiesta)
-        db.commit()
-        db.refresh(new_richiesta)
-        return new_richiesta
-    except Exception as e:
-        import traceback
-        print(f"ERROR create_richiesta: {type(e).__name__}: {e}")
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+    # Determina stato iniziale
+    stato_iniziale = StatoRichiesta.da_gestire
+    if richiesta_data.origine in [OrigineRichiesta.monitoraggio, OrigineRichiesta.centralino, OrigineRichiesta.email]:
+        stato_iniziale = StatoRichiesta.da_verificare
+    
+    # Calcola nuovo numero richiesta (emulazione sequence per SQLite)
+    max_num = db.query(func.max(Richiesta.numero_richiesta)).scalar() or 0
+    nuovo_numero = max_num + 1
+    
+    new_richiesta = Richiesta(
+        numero_richiesta=nuovo_numero,
+        cliente_id=richiesta_data.cliente_id,
+        sede_id=richiesta_data.sede_id,
+        ambito_id=richiesta_data.ambito_id,
+        descrizione=richiesta_data.descrizione,
+        priorita=richiesta_data.priorita,
+        data_appuntamento=richiesta_data.data_appuntamento,
+        origine=richiesta_data.origine,
+        stato=stato_iniziale,
+        creato_da_id=current_user.id,
+        scadenza_validazione=datetime.now().date() + timedelta(days=7)
+    )
+    db.add(new_richiesta)
+    db.commit()
+    db.refresh(new_richiesta)
+    return new_richiesta
 
 
 @router.put("/{richiesta_id}", response_model=RichiestaResponse)
