@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+:root {
+  /* Colors */
+  --color-primary: 99 102 241;
+  /* Indigo */
+  --color-secondary: 139 92 246;
+  /* Violet */
+  --color-accent: 14 165 233;
+  /* Sky */
+  --color-success: 34 197 94;
+  /* Green */
+  --color-warning: 234 179 8;
+  /* Yellow */
+  --color-danger: 239 68 68;
+  /* Red */
+
+  /* Background */
+  --bg-primary: 3 7 18;
+  /* gray-950 */
+  --bg-secondary: 17 24 39;
+  /* gray-900 */
+  --bg-tertiary: 31 41 55;
+  /* gray-800 */
+
+  /* Text */
+  --text-primary: 249 250 251;
+  /* gray-50 */
+  --text-secondary: 156 163 175;
+  /* gray-400 */
+  --text-muted: 107 114 128;
+  /* gray-500 */
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--bg-secondary));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--bg-tertiary));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(75 85 99);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, rgb(var(--color-primary)), rgb(var(--color-secondary)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.2);
+}
+
+/* Status badges - Pure CSS */
+.badge {
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.badge-success {
+  background: rgba(34, 197, 94, 0.2);
+  color: rgb(74, 222, 128);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.badge-warning {
+  background: rgba(234, 179, 8, 0.2);
+  color: rgb(250, 204, 21);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.badge-danger {
+  background: rgba(239, 68, 68, 0.2);
+  color: rgb(248, 113, 113);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-info {
+  background: rgba(14, 165, 233, 0.2);
+  color: rgb(56, 189, 248);
+  border: 1px solid rgba(14, 165, 233, 0.3);
+}
+
+.badge-default {
+  background: rgba(107, 114, 128, 0.2);
+  color: rgb(156, 163, 175);
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+/* Buttons - Pure CSS */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: rgb(79, 70, 229);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: rgb(99, 102, 241);
+}
+
+.btn-secondary {
+  background: rgb(55, 65, 81);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: rgb(75, 85, 99);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgb(75, 85, 99);
+  color: rgb(209, 213, 219);
+}
+
+.btn-outline:hover {
+  background: rgb(31, 41, 55);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: rgb(156, 163, 175);
+}
+
+.btn-ghost:hover {
+  background: rgb(31, 41, 55);
+  color: white;
+}
+
+.btn-danger {
+  background: rgb(220, 38, 38);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: rgb(239, 68, 68);
+}
+
+/* Inputs - Pure CSS */
+.input {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background: rgb(31, 41, 55);
+  border: 1px solid rgb(55, 65, 81);
+  border-radius: 0.5rem;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.input::placeholder {
+  color: rgb(107, 114, 128);
+}
+
+.input:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: rgb(99, 102, 241);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgb(99, 102, 241);
+}
+
+.input-error {
+  border-color: rgb(239, 68, 68);
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 2px rgb(239, 68, 68);
+}
+
+/* Cards - Pure CSS */
+.card {
+  background: rgb(17, 24, 39);
+  border: 1px solid rgb(31, 41, 55);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+/* Table - Pure CSS */
+.table-container {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(31, 41, 55);
+}
+
+.table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: 0.75rem 1rem;
+  background: rgba(31, 41, 55, 0.5);
+  color: rgb(156, 163, 175);
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  padding: 1rem;
+  border-top: 1px solid rgb(31, 41, 55);
+}
+
+.table tr:hover td {
+  background: rgba(31, 41, 55, 0.3);
+}
+
+/* Sidebar - Pure CSS */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.5rem;
+  color: rgb(156, 163, 175);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.sidebar-link:hover {
+  color: white;
+  background: rgb(31, 41, 55);
+}
+
+.sidebar-link.active {
+  background: rgba(99, 102, 241, 0.1);
+  color: rgb(129, 140, 248);
+  border-left: 2px solid rgb(99, 102, 241);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 20px 5px rgba(99, 102, 241, 0.2);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
