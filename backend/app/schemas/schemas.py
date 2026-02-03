@@ -72,6 +72,9 @@ class UtenteUpdate(BaseModel):
 class UtenteResponse(UtenteBase, BaseSchema):
     id: str
     attivo: bool
+    force_password_change: bool
+    is_super_admin: bool
+    email_verified: bool
     created_at: datetime
 
 
@@ -109,6 +112,7 @@ class SedeClienteResponse(SedeClienteBase, BaseSchema):
 
 class ClienteBase(BaseModel):
     ragione_sociale: str = Field(..., min_length=1, max_length=255)
+    nome_alternativo: Optional[str] = Field(None, max_length=255)
     partita_iva: Optional[str] = None
     codice_fiscale: Optional[str] = None
     email_principale: EmailStr
@@ -125,8 +129,10 @@ class ClienteCreate(ClienteBase):
 
 class ClienteUpdate(BaseModel):
     ragione_sociale: Optional[str] = None
+    nome_alternativo: Optional[str] = None
     partita_iva: Optional[str] = None
     codice_fiscale: Optional[str] = None
+    codice_gestionale_esterno: Optional[str] = Field(None, max_length=50)
     email_principale: Optional[EmailStr] = None
     email_secondarie: Optional[List[str]] = None
     telefoni: Optional[List[str]] = None
@@ -146,8 +152,9 @@ class ClienteResponse(ClienteBase, BaseSchema):
 
 class ClienteListResponse(BaseSchema):
     id: str
-    ragione_sociale: str
-    email_principale: str
+    ragione_sociale: str = Field(..., min_length=1, max_length=255)
+    email_principale: EmailStr
+    codice_gestionale_esterno: Optional[str] = Field(None, max_length=50)
     gestione_interna: bool
     attivo: bool
 
@@ -462,5 +469,107 @@ class MessaggioResponse(MessaggioBase, BaseSchema):
     created_at: datetime
 
 
+# =============================================
+# BROGLIACCIO SCHEMAS
+# =============================================
+class BrogliaccioBase(BaseModel):
+    contenuto: str = Field(..., min_length=1)
+    tipo: str = "text"  # text, voice, image, gps
+    media_url: Optional[str] = None
+    metadata_json: Optional[Any] = None
+
+
+class BrogliaccioCreate(BrogliaccioBase):
+    pass
+
+
+class BrogliaccioUpdate(BaseModel):
+    contenuto: Optional[str] = None
+    tipo: Optional[str] = None
+    media_url: Optional[str] = None
+    metadata_json: Optional[Any] = None
+    stato: Optional[str] = None
+
+
+class BrogliaccioResponse(BrogliaccioBase, BaseSchema):
+    id: str
+    utente_id: str
+    stato: str
+    created_at: datetime
+    updated_at: datetime
+
+
+# =============================================
+# PRODOTTI SCHEMAS
+# =============================================
+class ProdottoBase(BaseModel):
+    codice: str = Field(..., min_length=1, max_length=50)
+    nome: str = Field(..., min_length=1, max_length=255)
+    descrizione: Optional[str] = None
+    categoria: Optional[str] = None
+    prezzo: Optional[float] = None
+    iva: float = 22.0
+    unita_misura: str = "pz"
+
+
+class ProdottoCreate(ProdottoBase):
+    pass
+
+
+class ProdottoUpdate(BaseModel):
+    codice: Optional[str] = None
+    nome: Optional[str] = None
+    descrizione: Optional[str] = None
+    categoria: Optional[str] = None
+    prezzo: Optional[float] = None
+    iva: Optional[float] = None
+    unita_misura: Optional[str] = None
+    attivo: Optional[bool] = None
+
+
+class ProdottoResponse(ProdottoBase, BaseSchema):
+    id: str
+    attivo: bool
+    created_at: datetime
+    updated_at: datetime
+
+
+# =============================================
+# SERVIZI SCHEMAS
+# =============================================
+class ServizioBase(BaseModel):
+    codice: str = Field(..., min_length=1, max_length=50)
+    nome: str = Field(..., min_length=1, max_length=255)
+    descrizione: Optional[str] = None
+    categoria: Optional[str] = None
+    unita_misura: Optional[str] = "ore"
+    prezzo_unitario: Optional[float] = None
+    iva: float = 22.0
+
+
+class ServizioCreate(ServizioBase):
+    pass
+
+
+class ServizioUpdate(BaseModel):
+    codice: Optional[str] = None
+    nome: Optional[str] = None
+    descrizione: Optional[str] = None
+    categoria: Optional[str] = None
+    unita_misura: Optional[str] = None
+    prezzo_unitario: Optional[float] = None
+    iva: Optional[float] = None
+    attivo: Optional[bool] = None
+
+
+class ServizioResponse(ServizioBase, BaseSchema):
+    id: str
+    attivo: bool
+    created_at: datetime
+    updated_at: datetime
+
+
 # Forward references
 RichiestaDetailResponse.model_rebuild()
+
+

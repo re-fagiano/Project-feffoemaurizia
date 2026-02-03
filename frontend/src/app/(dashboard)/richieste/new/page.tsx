@@ -2,19 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/lib/api";
 import Link from "next/link";
-
-interface Cliente {
-    id: string;
-    ragione_sociale: string;
-}
+import ClientSearch from "@/components/ClientSearch";
 
 export default function NuovaRichiestaPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    const [loadingClienti, setLoadingClienti] = useState(true);
     const [error, setError] = useState("");
-    const [clienti, setClienti] = useState<Cliente[]>([]);
 
     const [formData, setFormData] = useState({
         cliente_id: "",
@@ -25,24 +20,10 @@ export default function NuovaRichiestaPage() {
     });
 
     useEffect(() => {
-        // Carica lista clienti
         const token = localStorage.getItem("token");
         if (!token) {
             router.push("/login");
-            return;
         }
-
-        fetch("http://localhost:8000/api/clienti", {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setClienti(Array.isArray(data) ? data : []);
-                setLoadingClienti(false);
-            })
-            .catch(() => {
-                setLoadingClienti(false);
-            });
     }, [router]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -69,7 +50,7 @@ export default function NuovaRichiestaPage() {
                 origine: formData.origine,
             };
 
-            const res = await fetch("http://localhost:8000/api/richieste", {
+            const res = await fetch(`${API_BASE_URL}/api/richieste`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -83,7 +64,7 @@ export default function NuovaRichiestaPage() {
                 throw new Error(data.detail || "Errore durante la creazione");
             }
 
-            router.push("/dashboard/richieste");
+            router.push("/richieste");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Errore di connessione");
         } finally {
@@ -96,7 +77,7 @@ export default function NuovaRichiestaPage() {
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
-                    <Link href="/dashboard/richieste" className="btn btn-ghost p-2">
+                    <Link href="/richieste" className="btn btn-ghost p-2">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
@@ -122,26 +103,11 @@ export default function NuovaRichiestaPage() {
                                 <label className="block text-sm font-medium text-gray-300 mb-2">
                                     Cliente *
                                 </label>
-                                {loadingClienti ? (
-                                    <div className="input flex items-center justify-center">
-                                        <div className="animate-spin w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full" />
-                                    </div>
-                                ) : (
-                                    <select
-                                        name="cliente_id"
-                                        value={formData.cliente_id}
-                                        onChange={handleChange}
-                                        className="input"
-                                        required
-                                    >
-                                        <option value="">Seleziona cliente...</option>
-                                        {clienti.map((cliente) => (
-                                            <option key={cliente.id} value={cliente.id}>
-                                                {cliente.ragione_sociale}
-                                            </option>
-                                        ))}
-                                    </select>
-                                )}
+                                <ClientSearch
+                                    required
+                                    onSelect={(cliente) => setFormData({ ...formData, cliente_id: cliente.id })}
+                                    initialValue=""
+                                />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -206,12 +172,12 @@ export default function NuovaRichiestaPage() {
 
                     {/* Actions */}
                     <div className="flex gap-4">
-                        <Link href="/dashboard/richieste" className="btn btn-outline flex-1">
+                        <Link href="/richieste" className="btn btn-outline flex-1">
                             Annulla
                         </Link>
                         <button
                             type="submit"
-                            disabled={loading || loadingClienti}
+                            disabled={loading}
                             className="btn btn-primary flex-1"
                         >
                             {loading ? (

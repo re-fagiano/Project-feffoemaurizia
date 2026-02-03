@@ -29,7 +29,11 @@ async def list_clienti(
     query = db.query(Cliente)
     
     if search:
-        query = query.filter(Cliente.ragione_sociale.ilike(f"%{search}%"))
+        from sqlalchemy import or_
+        query = query.filter(or_(
+            Cliente.ragione_sociale.ilike(f"%{search}%"),
+            Cliente.nome_alternativo.ilike(f"%{search}%")
+        ))
     if attivo is not None:
         query = query.filter(Cliente.attivo == attivo)
     
@@ -64,6 +68,7 @@ async def create_cliente(
     # Crea cliente
     new_cliente = Cliente(
         ragione_sociale=cliente_data.ragione_sociale,
+        nome_alternativo=cliente_data.nome_alternativo,
         partita_iva=cliente_data.partita_iva,
         codice_fiscale=cliente_data.codice_fiscale,
         email_principale=cliente_data.email_principale,

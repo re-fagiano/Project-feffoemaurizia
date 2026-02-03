@@ -944,3 +944,67 @@ Admin NON può modificare direttamente:
 ├── Ore totali (deve creare ricarica/estensione)
 ├── Tipo contratto (forfettario ↔ monte ore)
 └── Template di riferimento (crea nuovo contratto)
+
+
+
+
+
+## 📱 STRUTTURA MENU APPLICAZIONE
+
+### Principi Organizzativi
+- Menu diviso in **2 macro-aree**: Configurazione (statica) e Operativa (quotidiana)
+- Per configurazine statica si intendono tutte le entità di inserimento trasversali a moduli, quindi alla base del funzionamento dell'applicazione
+- Per operativa si intendono i menu in cui vengono registrate le operazioni che sono un misto di informazioni prese dalle entità statiche e combintate al fine di creare un informazione complessa (es. richiesta assistenza con i suoi aspetti di pagamento, note, etc.)
+- Le anagrafiche principali sono: clienti, prodotti, servizi, contratti, tipi attività, ambiti attività, utenti
+- C'è un sistema di acl per le pagine e i menu, quindi devono esser predisposti sistemi che permettono la visione e l'accesso ai menu e pagine in base ai ruoli, ma anche con possiblità di personalizzazione quindi alla fine possono esserci supervisori con permessi amministrativi e supervisori puri oppure amministratori limitati.
+- Badge numerici per notifiche/contatori
+- Ricerca globale cross-menu, rappresentata da una barra di ricerca presente in tutte le pagine in alto 
+
+
+### LAYOUT STANDARD GENERALE
+ - Ispirato a ide come visual studio code
+ - La navigazione menu manuale è fatta a sinistra in un trafiletto che può rimanere espanso o compresso. quando è compresso, si visualizzano solo le icone dei menu.
+ - Elemento di ricerca sempre presente in alto nelle pagine, questa è la searchbar globale e mostra sia i risultati della ricerca ai fini di navigazione nel menu, che risultati di azioni rapide.
+ - Le azioni rapide sono voci del menu che permettono di eseguire azioni rapide, come creare nuove richieste, eseguire ricerca cliente, eseguire ricerca id, etc.
+ - Il trafiletto a destra lo possiamo chiamare 'monitor screen' ed è predisposto per mostrare informazioni dinamiche e di orientamento al lavoro, quindi chat, appuntamenti, note eventi in corso e altro riguardanti l'untente specifico e altro. E' configurarbile a widget questa parte proprio per permettere agli admin, tecnici e supervisori di personalizzare le informazioni che vogliono vedere in questo monitor screen.
+ - La parte centrale dello schermo rimane il desk principale di lavoro, quindi assumerà gli elementi grafici necessari all'ambito in cui ci si trova. 
+
+
+### LAYOUT VISUALIZZAZIONE ANAGRAFICHE BASE
+ - Le anagrafiche base sono: clienti, prodotti, servizi, contratti, tipi attività, ambiti attività, utenti
+ - Vengono visualizzate con stile inline e le colonne di visualizzazione sono configurabili e mostrano i campi principali dell'entità. 
+ - Ogni riga ha appesa una serie di pulsanti per l'esecuzione di azioni rapide, come modifica, eliminazione, visualizzazione dettagliata, etc. con delle icone standardizzate e piccole. 
+ - nell'intestazione delle colonne è possible inserire dei partter di ricerca all'interno di text box, in modo da filtrare i risultati in base al campo specifico. 
+ - per non appesantire la visualizzazione, la visualizzazione è divisa in pagine e la paginazione è gestita automaticamente questo quando i record sono più di 50 per pagina.
+ 
+ 
+---
+
+## 🔧 AREA CONFIGURAZIONE - Menu Sistema
+
+
+
+**Accesso: Solo Admin (o ruoli con ACL specifici)**
+
+### Principi di Design Menu Configurazione
+- le voci 'gestione' indicano la configurazione di una determinata entità(es. gestione utenti, gestione clienti, etc.)
+- Ogni pagina di gestione include: Lista + Aggiungi + Modifica + Elimina + ricerca contestuale all'entità 
+- Layout standard: Tabella/Grid + Form laterale o modale
+- Azioni massive disponibili dove applicabile
+- Import/Export per dati bulk
+
+
+## 👤 1. GESTIONE UTENTI E PERMESSI
+## 📋 2. GESTIONE CLIENTI
+## 📍 3. GESTIONE SEDI
+## 📦 4. GESTIONE PRODOTTI
+## 🛠️ 5. GESTIONE SERVIZI
+## 🤝 6. GESTIONE CONTRATTI
+## 📊 7. GESTIONE TIPI ATTIVITÀ
+## 🎯 8. GESTIONE AMBITI ATTIVITÀ
+## 🔄 9. GESTIONE RICORRENZE
+## 💰 10. GESTIONE FATTURAZIONE
+## 📈 11. GESTIONE REPORT
+## ⚙️ 12. GESTIONE IMPOSTAZIONI
+
+---

@@ -59,6 +59,21 @@ async def get_attivita(
     return attivita
 
 
+@router.delete("/{attivita_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_attivita(
+    attivita_id: str,
+    current_user: Utente = Depends(require_tecnico()),
+    db: Session = Depends(get_db)
+):
+    """Elimina attivitÃ """
+    attivita = db.query(Attivita).filter(Attivita.id == attivita_id).first()
+    if not attivita:
+        raise HTTPException(status_code=404, detail="AttivitÃ  non trovata")
+    
+    db.delete(attivita)
+    db.commit()
+
+
 @router.post("/", response_model=AttivitaResponse, status_code=status.HTTP_201_CREATED)
 async def create_attivita(
     attivita_data: AttivitaCreate,

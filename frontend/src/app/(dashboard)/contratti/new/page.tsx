@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { API_BASE_URL } from "@/lib/api";
 import Link from "next/link";
 
 interface ContrattoTemplate {
@@ -48,10 +49,10 @@ export default function NuovoContrattoPage() {
 
         // Carica clienti e templates contratto
         Promise.all([
-            fetch("http://localhost:8000/api/clienti", {
+            fetch(`${API_BASE_URL}/api/clienti`, {
                 headers: { Authorization: `Bearer ${token}` },
             }).then((r) => r.json()),
-            fetch("http://localhost:8000/api/contratti", {
+            fetch(`${API_BASE_URL}/api/contratti`, {
                 headers: { Authorization: `Bearer ${token}` },
             }).then((r) => r.json()).catch(() => []),
         ])
@@ -93,7 +94,7 @@ export default function NuovoContrattoPage() {
                 note: formData.note || null,
             };
 
-            const res = await fetch("http://localhost:8000/api/contratti/", {
+            const res = await fetch(`${API_BASE_URL}/api/contratti/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

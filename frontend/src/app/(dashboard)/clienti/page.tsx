@@ -2,6 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { fetchWithAuth } from "@/lib/auth";
+import PageHeader from "@/components/common/PageHeader";
+import DataTable, { Column } from "@/components/common/DataTable";
+import StatusBadge from "@/components/common/StatusBadge";
 
 interface Cliente {
     id: string;
@@ -12,40 +17,77 @@ interface Cliente {
 }
 
 export default function ClientiPage() {
+    const router = useRouter();
     const [clienti, setClienti] = useState<Cliente[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        fetch(`http://localhost:8000/api/clienti/?search=${search}`, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
+        fetchWithAuth(`/api/clienti/?search=${search}`)
             .then((data) => {
                 setClienti(data);
                 setLoading(false);
             })
-            .catch(() => setLoading(false));
+            .catch((error) => {
+                console.error("Errore caricamento clienti:", error);
+                setLoading(false);
+            });
     }, [search]);
+
+    const columns: Column<Cliente>[] = [
+        {
+            header: "Ragione Sociale",
+            accessor: "ragione_sociale",
+            className: "font-medium",
+        },
+        {
+            header: "Email",
+            accessor: "email_principale",
+            className: "text-gray-400",
+        },
+        {
+            header: "Tipo",
+            accessor: (cliente) => (
+                <StatusBadge
+                    status={cliente.gestione_interna ? "info" : "default"}
+                    label={cliente.gestione_interna ? "Interno" : "Esterno"}
+                />
+            ),
+        },
+        {
+            header: "Stato",
+            accessor: (cliente) => (
+                <StatusBadge status={cliente.attivo} />
+            ),
+        },
+        {
+            header: "Azioni",
+            accessor: (cliente) => (
+                <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                    <Link href={`/clienti/${cliente.id}`} className="btn btn-ghost btn-sm text-indigo-400 hover:text-indigo-300">
+                        <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                        Modifica
+                    </Link>
+                </div>
+            ),
+        },
+    ];
 
     return (
         <>
-            <header className="bg-gray-900/50 border-b border-gray-800 px-8 py-4 flex items-center justify-between sticky top-0 z-10 backdrop-blur-sm">
-                <div>
-                    <h1 className="text-2xl font-bold">Clienti</h1>
-                    <p className="text-gray-400">Gestisci i tuoi clienti</p>
-                </div>
-
+            <PageHeader
+                title="Clienti"
+                description="Gestisci i tuoi clienti"
+            >
                 <Link href="/clienti/new" className="btn btn-primary">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                     Nuovo Cliente
                 </Link>
-            </header>
+            </PageHeader>
 
             <div className="p-8 animate-fade-in">
                 {/* Search */}
@@ -60,55 +102,14 @@ export default function ClientiPage() {
                 </div>
 
                 {/* Table */}
-                <div className="table-container">
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Ragione Sociale</th>
-                                <th>Email</th>
-                                <th>Tipo</th>
-                                <th>Stato</th>
-                                <th>Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {loading ? (
-                                <tr>
-                                    <td colSpan={5} className="text-center py-8">
-                                        <div className="animate-spin w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full mx-auto" />
-                                    </td>
-                                </tr>
-                            ) : clienti.length === 0 ? (
-                                <tr>
-                                    <td colSpan={5} className="text-center py-8 text-gray-400">
-                                        Nessun cliente trovato. Inizia creando il primo!
-                                    </td>
-                                </tr>
-                            ) : (
-                                clienti.map((cliente) => (
-                                    <tr key={cliente.id}>
-                                        <td className="font-medium">{cliente.ragione_sociale}</td>
-                                        <td className="text-gray-400">{cliente.email_principale}</td>
-                                        <td>
-                                            <span className={cliente.gestione_interna ? "badge badge-info" : "badge badge-default"}>
-                                                {cliente.gestione_interna ? "Interno" : "Esterno"}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span className={cliente.attivo ? "badge badge-success" : "badge badge-danger"}>
-                                                {cliente.attivo ? "Attivo" : "Inattivo"}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <Link href={`/clienti/${cliente.id}`} className="btn btn-ghost btn-sm">
-                                                Dettagli
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                <div className="card">
+                    <DataTable
+                        data={clienti}
+                        columns={columns}
+                        loading={loading}
+                        emptyMessage="Nessun cliente trovato. Inizia creando il primo!"
+                        onRowClick={(cliente) => router.push(`/clienti/${cliente.id}`)}
+                    />
                 </div>
             </div>
         </>

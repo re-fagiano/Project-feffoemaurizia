@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { fetchWithAuth } from "@/lib/auth";
 
 interface Richiesta {
     id: string;
@@ -41,22 +42,19 @@ export default function RichiestePage() {
     const [filtroStato, setFiltroStato] = useState<string>("");
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) return;
+        const endpoint = filtroStato
+            ? `/api/richieste/?stato=${filtroStato}`
+            : `/api/richieste/`;
 
-        const url = filtroStato
-            ? `http://localhost:8000/api/richieste/?stato=${filtroStato}`
-            : "http://localhost:8000/api/richieste/";
-
-        fetch(url, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
+        fetchWithAuth(endpoint)
             .then((data) => {
                 setRichieste(data);
                 setLoading(false);
             })
-            .catch(() => setLoading(false));
+            .catch((error) => {
+                console.error("Errore caricamento richieste:", error);
+                setLoading(false);
+            });
     }, [filtroStato]);
 
     return (

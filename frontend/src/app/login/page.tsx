@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { API_BASE_URL } from "@/lib/api";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -16,7 +17,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         // Controlla se serve setup
-        fetch("http://localhost:8000/api/auth/setup-status")
+        fetch(`${API_BASE_URL}/api/auth/setup-status`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.needs_setup) {
@@ -31,6 +32,16 @@ export default function LoginPage() {
         if (searchParams.get("setup") === "success") {
             setSuccess("Account creato con successo! Effettua il login.");
         }
+
+        // Mostra messaggio successo dopo verifica email
+        if (searchParams.get("verified") === "success") {
+            setSuccess("Email verificata con successo! Ora puoi effettuare il login.");
+        }
+
+        // Mostra messaggio sessione scaduta
+        if (searchParams.get("session") === "expired") {
+            setError("Sessione scaduta. Effettua nuovamente il login.");
+        }
     }, [router, searchParams]);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -44,7 +55,7 @@ export default function LoginPage() {
             formData.append("username", email);
             formData.append("password", password);
 
-            const res = await fetch("http://localhost:8000/api/auth/login", {
+            const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: "POST",
                 body: formData,
             });

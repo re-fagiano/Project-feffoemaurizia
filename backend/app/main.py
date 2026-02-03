@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import get_settings
 from .database import engine, Base
-from .routers import auth, clienti, ambiti, richieste, attivita, contratti, schedules, chat
+from .routers import auth, clienti, ambiti, richieste, attivita, contratti, schedules, chat, users, brogliaccio, prodotti, servizi
 # Import models per registrarli con Base
 from .models import models  # noqa
 
@@ -56,6 +56,10 @@ app.include_router(attivita, prefix="/api/attivita", tags=["Attività"])
 app.include_router(contratti, prefix="/api/contratti", tags=["Contratti"])
 app.include_router(schedules, prefix="/api/schedules", tags=["Schedulatore"])
 app.include_router(chat, prefix="/api/chat", tags=["Chat"])
+app.include_router(users.router, tags=["Utenti"])
+app.include_router(brogliaccio.router, prefix="/api/brogliaccio", tags=["Brogliaccio"])
+app.include_router(prodotti.router, prefix="/api/prodotti", tags=["Prodotti"])
+app.include_router(servizi.router, prefix="/api/servizi", tags=["Servizi"])
 
 
 if __name__ == "__main__":

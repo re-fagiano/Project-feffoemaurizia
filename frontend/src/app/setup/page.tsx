@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_BASE_URL } from "@/lib/api";
 
 export default function SetupPage() {
     const router = useRouter();
@@ -39,7 +40,7 @@ export default function SetupPage() {
         setLoading(true);
 
         try {
-            const res = await fetch("http://localhost:8000/api/auth/setup", {
+            const res = await fetch(`${API_BASE_URL}/api/auth/setup`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -56,8 +57,8 @@ export default function SetupPage() {
                 throw new Error(data.detail || "Errore durante il setup");
             }
 
-            // Setup completato, vai al login
-            router.push("/login?setup=success");
+            // Setup completato, vai alla pagina di attesa verifica email
+            router.push(`/verify-email-pending?email=${encodeURIComponent(formData.email)}`);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Errore di connessione");
         } finally {
@@ -93,8 +94,8 @@ export default function SetupPage() {
                     {[1, 2].map((s) => (
                         <div key={s} className="flex items-center gap-2">
                             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all ${step >= s
-                                    ? "bg-indigo-500 text-white"
-                                    : "bg-gray-800 text-gray-500"
+                                ? "bg-indigo-500 text-white"
+                                : "bg-gray-800 text-gray-500"
                                 }`}>
                                 {step > s ? (
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

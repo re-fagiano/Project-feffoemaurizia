@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { fetchWithAuth } from "@/lib/auth";
 
 interface ContrattoCliente {
     id: string;
@@ -25,21 +26,15 @@ export default function ContrattiPage() {
     const [filterTipo, setFilterTipo] = useState<string>("tutti");
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            router.push("/login");
-            return;
-        }
-
-        fetch("http://localhost:8000/api/contratti", {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-            .then((res) => res.json())
+        fetchWithAuth(`/api/contratti`)
             .then((data) => {
                 setContratti(Array.isArray(data) ? data : []);
                 setLoading(false);
             })
-            .catch(() => setLoading(false));
+            .catch((error) => {
+                console.error("Errore caricamento contratti:", error);
+                setLoading(false);
+            });
     }, [router]);
 
     const filteredContratti = contratti.filter((c) => {

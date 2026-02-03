@@ -35,6 +35,16 @@ class Utente(Base):
     ruolo = Column(SQLEnum(UserRole), nullable=False)
     telefono = Column(String(50))
     attivo = Column(Boolean, default=True)
+    is_super_admin = Column(Boolean, default=False)  # Primo admin del sistema
+    
+    # Email verification
+    email_verified = Column(Boolean, default=False)
+    email_verification_token = Column(String(255), nullable=True, unique=True)
+    email_verification_token_expires = Column(DateTime, nullable=True)
+    
+    # Password policy
+    force_password_change = Column(Boolean, default=False)
+    
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -51,9 +61,11 @@ class Cliente(Base):
     
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     ragione_sociale = Column(String(255), nullable=False)
+    nome_alternativo = Column(String(255), nullable=True, index=True)  # Nome "amichevole" per ricerca
     partita_iva = Column(String(20))
     codice_fiscale = Column(String(20))
     email_principale = Column(String(255), nullable=False)
+    codice_gestionale_esterno = Column(String(50), nullable=True, index=True)  # Codice per software esterno
     email_secondarie = Column(JSON)  # Lista di email come JSON
     telefoni = Column(JSON)  # Lista di telefoni come JSON
     gestione_interna = Column(Boolean, default=False)
@@ -365,3 +377,66 @@ class MessaggioChat(Base):
     
     # Relationships
     richiesta = relationship("Richiesta", back_populates="messaggi")
+
+
+# =============================================
+# MODEL: Brogliaccio (Drafts)
+# =============================================
+class Brogliaccio(Base):
+    __tablename__ = "brogliaccio"
+    
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    utente_id = Column(String(36), ForeignKey("utenti.id"), nullable=False, index=True)
+    contenuto = Column(Text, nullable=False)
+    tipo = Column(String(20), default="text")  # text, voice, image, gps
+    media_url = Column(String(500))
+    metadata_json = Column(JSON)  # Renamed to avoid reserved word conflict if any, clearer intent
+    stato = Column(String(20), default="draft")  # draft, converted, archived
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    utente = relationship("Utente")
+
+
+# =============================================
+# MODEL: Prodotti
+# =============================================
+class Prodotto(Base):
+    __tablename__ = "prodotti"
+    
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    codice = Column(String(50), unique=True, nullable=False, index=True)
+    nome = Column(String(255), nullable=False)
+    descrizione = Column(Text)
+    categoria = Column(String(100))
+    prezzo = Column(Numeric(10, 2))  # Prezzo base / Listino
+    iva = Column(Numeric(5, 2), default=22.0)
+    unita_misura = Column(String(20), default="pz")
+    attivo = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+# =============================================
+# MODEL: Servizi
+# =============================================
+class Servizio(Base):
+    __tablename__ = "servizi"
+    
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    codice = Column(String(50), unique=True, nullable=False, index=True)
+    nome = Column(String(255), nullable=False)
+    descrizione = Column(Text)
+    categoria = Column(String(100))
+    unita_misura = Column(String(20))  # ore, giorni, mese, anno, qta
+    prezzo_unitario = Column(Numeric(10, 2))
+    iva = Column(Numeric(5, 2), default=22.0)
+    attivo = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
