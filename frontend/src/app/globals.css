@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=swap');
-
 
 :root {
   /* Colors */
@@ -319,7 +317,7 @@ body {
 
 /* Handwriting font for sticky notes */
 .font-handwriting {
-  font-family: 'Caveat', cursive;
+  font-family: var(--font-caveat), 'Caveat', cursive;
   font-size: 1.1rem;
   line-height: 1.4;
 }
