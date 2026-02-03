@@ -71,6 +71,13 @@ const menuItems: MenuItem[] = [
         section: "operative",
     },
     {
+        id: "brogliaccio",
+        label: "Brogliaccio",
+        icon: FileText,
+        href: "/brogliaccio",
+        section: "operative",
+    },
+    {
         id: "fatturazione",
         label: "Fatturazione",
         icon: Receipt,

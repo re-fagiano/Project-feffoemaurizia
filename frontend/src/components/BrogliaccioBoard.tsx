@@ -15,7 +15,11 @@ interface BrogliacciNote {
     created_at: string;
 }
 
-export default function BrogliaccioBoard() {
+interface BrogliaccioBoardProps {
+    fullPage?: boolean;
+}
+
+export default function BrogliaccioBoard({ fullPage = false }: BrogliaccioBoardProps) {
     const [notes, setNotes] = useState<BrogliacciNote[]>([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
@@ -133,26 +137,50 @@ export default function BrogliaccioBoard() {
         }
     };
 
+    // Different layouts for sidebar vs full page
+    const containerClass = fullPage
+        ? "w-full"
+        : "w-80 bg-gradient-to-br from-amber-50 to-orange-50 border-r border-amber-200 p-4 overflow-y-auto";
+
+    const gridClass = fullPage
+        ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+        : "grid grid-cols-1 gap-4";
+
     return (
-        <div className="w-80 bg-gradient-to-br from-amber-50 to-orange-50 border-r border-amber-200 p-4 overflow-y-auto">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                    <StickyNoteIcon className="w-5 h-5 text-amber-700" />
-                    <h2 className="text-lg font-bold text-amber-900">Brogliaccio</h2>
+        <div className={containerClass}>
+            {/* Header - only show in sidebar mode */}
+            {!fullPage && (
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <StickyNoteIcon className="w-5 h-5 text-amber-700" />
+                        <h2 className="text-lg font-bold text-amber-900">Brogliaccio</h2>
+                    </div>
+                    <button
+                        onClick={() => setShowAddForm(!showAddForm)}
+                        className="p-2 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-colors shadow-md"
+                        title="Add note"
+                    >
+                        <Plus className="w-4 h-4" />
+                    </button>
                 </div>
-                <button
-                    onClick={() => setShowAddForm(!showAddForm)}
-                    className="p-2 bg-amber-500 hover:bg-amber-600 text-white rounded-full transition-colors shadow-md"
-                    title="Add note"
-                >
-                    <Plus className="w-4 h-4" />
-                </button>
-            </div>
+            )}
+
+            {/* Add button for full page mode */}
+            {fullPage && (
+                <div className="flex justify-end mb-6">
+                    <button
+                        onClick={() => setShowAddForm(!showAddForm)}
+                        className="flex items-center gap-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition-colors shadow-md"
+                    >
+                        <Plus className="w-5 h-5" />
+                        Nuova Nota
+                    </button>
+                </div>
+            )}
 
             {/* Add form */}
             {showAddForm && (
-                <div className="mb-4 p-3 bg-white rounded-lg shadow-md border border-amber-200">
+                <div className={`mb-4 p-3 bg-white rounded-lg shadow-md border border-amber-200 ${fullPage ? 'max-w-md' : ''}`}>
                     <textarea
                         value={newNoteContent}
                         onChange={(e) => setNewNoteContent(e.target.value)}
@@ -200,7 +228,7 @@ export default function BrogliaccioBoard() {
                     <p className="text-xs mt-1">Clicca + per aggiungerne una</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 gap-4">
+                <div className={gridClass}>
                     {notes.map((note) => (
                         <StickyNote
                             key={note.id}
