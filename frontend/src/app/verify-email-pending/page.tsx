@@ -1,9 +1,10 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function VerifyEmailPendingPage() {
+function VerifyEmailPendingContent() {
     const searchParams = useSearchParams();
     const email = searchParams.get("email") || "la tua email";
 
@@ -54,5 +55,17 @@ export default function VerifyEmailPendingPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function VerifyEmailPendingPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-950">
+                <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
+            </div>
+        }>
+            <VerifyEmailPendingContent />
+        </Suspense>
     );
 }
