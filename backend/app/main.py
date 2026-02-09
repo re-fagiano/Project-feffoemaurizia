@@ -17,8 +17,9 @@ settings = get_settings()
 async def lifespan(app: FastAPI):
     """Lifecycle: crea tabelle all'avvio"""
     Base.metadata.create_all(bind=engine)
-    print("✅ Database tables created/verified")
+    print("[OK] Database tables created/verified")
     yield
+
 
 # Crea app FastAPI
 app = FastAPI(
