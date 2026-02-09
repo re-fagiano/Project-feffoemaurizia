@@ -1,0 +1,51 @@
+
+import requests
+import uuid
+
+API_URL = "http://localhost:8000/api"
+
+def test_user_creation():
+    # 1. Login as Admin
+    print("Logging in...")
+    try:
+        resp = requests.post(f"{API_URL}/auth/login", data={"username": "admin@example.com", "password": "password"}) # Adjust creds if needed
+        # Wait, if I just reset DB, I need to know the setup admin creds.
+        # Usually it's what user set up. 
+        # But wait, the user SAID they did reset. They probably ran setup?
+        # I'll assume they have a token or I can create a new setup if needed.
+        # Actually I can't know the password unless I created it.
+        # But I can try to use a hardcoded token if I can get one, or just try to register if I was setting up.
+        
+        # NOTE: The user is in "Configurazione Utenti", so they are logged in.
+        # I will assume standard admin login works if I reset it recently to standard behavior or if I can use the `test_client_alias` approach.
+        # But I don't know the password the user set during setup.
+        pass
+    except:
+        pass
+
+    # Actually, I can check if /api/auth/setup-status says needs_setup.
+    # If yes, I can do setup.
+    
+    # But better: I can't easily reproduce auth without credentials.
+    # However, I can check the CODE logic closely.
+    pass
+
+# RE-READING AUTH.PY
+# verify_email=False
+# force_password_change=True
+
+# Issue: Double Submit?
+# In `page.tsx`:
+# const handleCreateUser = async (e: React.FormEvent) => {
+#    e.preventDefault();
+#    // ...
+#    await fetchWithAuth(...)
+#    setShowNewUserModal(false);
+# }
+
+# If the user clicks "Crea Utente" (submit button)
+# And maybe hits Enter?
+# The handler awaits.
+# If it clicks twice?
+# disable the button while loading?
+pass
