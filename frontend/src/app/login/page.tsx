@@ -18,6 +18,7 @@ function LoginPageContent() {
     const [checkingSetup, setCheckingSetup] = useState(true);
 
     useEffect(() => {
+        // Controlla se serve setup
         fetch(`${API_URL}/api/auth/setup-status`)
             .then((res) => res.json())
             .then((data) => {
