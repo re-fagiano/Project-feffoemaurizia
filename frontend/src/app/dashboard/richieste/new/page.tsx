@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/lib/config";
 
 interface Cliente {
     id: string;
@@ -32,7 +33,7 @@ export default function NuovaRichiestaPage() {
             return;
         }
 
-        fetch("http://localhost:8000/api/clienti", {
+        fetch(`${API_URL}/api/clienti`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
@@ -69,7 +70,7 @@ export default function NuovaRichiestaPage() {
                 origine: formData.origine,
             };
 
-            const res = await fetch("http://localhost:8000/api/richieste", {
+            const res = await fetch(`${API_URL}/api/richieste`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

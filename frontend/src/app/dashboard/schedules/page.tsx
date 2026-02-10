@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/lib/config";
 
 interface Schedule {
     id: string;
@@ -27,7 +28,7 @@ export default function SchedulesPage() {
             return;
         }
 
-        fetch("http://localhost:8000/api/schedules", {
+        fetch(`${API_URL}/api/schedules`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then((res) => res.json())
