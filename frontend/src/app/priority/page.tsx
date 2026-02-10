@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { API_URL } from "@/lib/config";
 
 interface Richiesta {
     id: string;
@@ -34,7 +35,7 @@ export default function PriorityPage() {
         if (!token) return;
 
         try {
-            const res = await fetch("http://localhost:8000/api/richieste/", {
+            const res = await fetch(`${API_URL}/api/richieste/`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/lib/config";
 
 export default function NuovoClientePage() {
     const router = useRouter();
@@ -61,7 +62,7 @@ export default function NuovoClientePage() {
                 }] : null,
             };
 
-            const res = await fetch("http://localhost:8000/api/clienti", {
+            const res = await fetch(`${API_URL}/api/clienti`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

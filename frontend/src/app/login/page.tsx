@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/lib/config";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
     const router = useRouter();
+    const { login } = useAuth();
     const searchParams = useSearchParams();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,7 +19,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         // Controlla se serve setup
-        fetch("http://localhost:8000/api/auth/setup-status")
+        fetch(`${API_URL}/api/auth/setup-status`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.needs_setup) {
@@ -44,7 +47,7 @@ export default function LoginPage() {
             formData.append("username", email);
             formData.append("password", password);
 
-            const res = await fetch("http://localhost:8000/api/auth/login", {
+            const res = await fetch(`${API_URL}/api/auth/login`, {
                 method: "POST",
                 body: formData,
             });
@@ -55,7 +58,7 @@ export default function LoginPage() {
             }
 
             const data = await res.json();
-            localStorage.setItem("token", data.access_token);
+            login(data.access_token);
             router.push("/dashboard");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Errore di connessione");
