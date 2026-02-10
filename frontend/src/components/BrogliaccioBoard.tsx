@@ -48,7 +48,7 @@ export default function BrogliaccioBoard({ fullPage = false }: BrogliaccioBoardP
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
     const [newNoteContent, setNewNoteContent] = useState("");
-    const [newNoteUrgency, setNewNoteUrgency] = useState<UrgencyLevel>(URGENCY_LEVELS.NORMAL);
+    const [newNoteUrgency, setNewNoteUrgency] = useState<UrgencyLevel>(URGENCY_LEVELS.NORMALE);
 
     // Expandable note modal state
     const [selectedNote, setSelectedNote] = useState<BrogliacciNote | null>(null);
