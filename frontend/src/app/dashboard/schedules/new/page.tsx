@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/lib/config";
 
 interface Cliente {
     id: string;
@@ -45,10 +46,10 @@ export default function NuovoSchedulePage() {
         }
 
         Promise.all([
-            fetch("http://localhost:8000/api/clienti", {
+            fetch(`${API_URL}/api/clienti`, {
                 headers: { Authorization: `Bearer ${token}` },
             }).then((r) => r.json()),
-            fetch("http://localhost:8000/api/contratti/clienti", {
+            fetch(`${API_URL}/api/contratti/clienti`, {
                 headers: { Authorization: `Bearer ${token}` },
             }).then((r) => r.json()).catch(() => []),
         ])
@@ -92,7 +93,7 @@ export default function NuovoSchedulePage() {
                 parametri_json: formData.parametri_json ? JSON.parse(formData.parametri_json) : null,
             };
 
-            const res = await fetch("http://localhost:8000/api/schedules", {
+            const res = await fetch(`${API_URL}/api/schedules`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

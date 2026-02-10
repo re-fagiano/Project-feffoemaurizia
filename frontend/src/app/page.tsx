@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_URL } from "@/lib/config";
 
 export default function Home() {
   const router = useRouter();
@@ -10,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     // Controlla se serve setup iniziale
-    fetch("http://localhost:8000/api/auth/setup-status")
+    fetch(`${API_URL}/api/auth/setup-status`)
       .then((res) => res.json())
       .then((data) => {
         if (data.needs_setup) {
